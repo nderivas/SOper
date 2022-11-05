@@ -9,7 +9,6 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <string.h>
 
 void imprimirCar(const char c, const int n) {
 
@@ -26,10 +25,10 @@ int main(int argc, char *argv[]) {
         imprimirCar('b', atoi(argv[1]));
     else {
         imprimirCar('c', atoi(argv[1]));
-        wait(0);
-        wait(0);
+        wait(NULL);
+        wait(NULL); // Devuelve pid del hijo
     }
 
-    exit(0);
+    exit(0); // Manda código 0
 
 }
