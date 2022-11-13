@@ -1,4 +1,4 @@
-# Sistemas Operativos
+# Sistemas Operativos 🍴
 ###### Nicolás de Rivas Morillo - Universidad de Zaragoza - 3er cuatrimestre
 
 ---
