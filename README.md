@@ -1,5 +1,7 @@
 # Sistemas Operativos
-###### Universidad de Zaragoza - 3er cuatrimestre
+###### Nicolás de Rivas Morillo - Universidad de Zaragoza - 3er cuatrimestre
+
+---
 
 - Práctica 3:
 
