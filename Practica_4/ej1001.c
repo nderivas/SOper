@@ -23,6 +23,9 @@ int main()
     char *argt[BUFSIZE];	/* vector de BUFSIZE punteros */
     int i, parate, pid;
 
+    signal(SIGINT, SIG_IGN);
+    signal(SIGQUIT, SIG_IGN); 
+
     while(1) {
         fprintf(stderr, "\n_$ ");
         gets(s);
@@ -57,14 +60,14 @@ int main()
                 syserr("fork");
       
             case 0:    /* hijo */
+                signal(SIGINT, SIG_DFL);
+                signal(SIGQUIT, SIG_DFL);
                 execvp(argt[1], &argt[1]);
                 fprintf(stderr,"\nNo se puede ejecutar %s\n", argt[1]);
                 syserr("execvp");
     
             default:    /* padre */
-                signal(SIGINT, SIG_IGN);
-                signal(SIGQUIT, SIG_IGN);
-                if (parate)
+               if (parate)
                     while (pid != wait(NULL));
         } /* switch */
     } /* while */
