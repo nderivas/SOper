@@ -4,7 +4,6 @@
 #include <unistd.h>
 
 void f(){
-	signal(SIGUSR1,f);
 	fprintf(stderr,"-");
 }
 
@@ -17,7 +16,10 @@ int main(){
 
     sigprocmask(SIG_BLOCK, &miMasc, &oldMasc);
 
-	signal(SIGUSR1,f);
+    struct sigaction miact, oldact;
+    miact.sa_handler = f;
+
+	sigaction(SIGUSR1, &miact, &oldact);
 
 	if((pidUno = fork()) == 0) {
 		
