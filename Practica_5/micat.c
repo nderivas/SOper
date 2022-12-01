@@ -23,19 +23,8 @@ int main(int argc, char* argv[]) {
     }
 
     int fd = 1;
-    if (argc > 1) {
-        fd = open(argv[1], O_WRONLY, 0700);
-        if (fd == -1)
-            fd = creat(argv[1], 0700); // equiv a O_WRONLY | O_CREAT | O_TRUNC
-        else {
-            int seekerr = lseek(fd, 0, SEEK_END); // no O_APPEND en open?
-            if (seekerr == -1) {
-                fprintf(stderr, "Error al ir al final del archivo.\n");
-                exit(1);
-
-            }
-        }
-    }
+    if (argc > 1)
+        fd = open(argv[1], O_WRONLY | O_CREAT | O_APPEND, 0700); 
 
     if (fd == -1) {
         fprintf(stderr, "Error al abrir el archivo de salida.\n");
@@ -47,6 +36,12 @@ int main(int argc, char* argv[]) {
     if (wr == -1) {
         fprintf(stderr, "Error al escribir a la salida.\n");
         exit(1);
+    }
+
+    int error = close(fd);
+    if (error == -1) {
+        fprintf(stderr, "Error al cerrar el archivo.\n");
+        exit(0);
     }
 
     exit(0);

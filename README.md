@@ -1,4 +1,5 @@
 # Sistemas Operativos 🍴
+
 ###### Nicolás de Rivas Morillo - Universidad de Zaragoza - 3er cuatrimestre
 
 ---
@@ -6,13 +7,14 @@
 - Práctica 3 (fork y exec):
 
 **TP1.c**: Escribe un programa en C que cree un hijo. Además, antes de finalizar, cada uno de los procesos debe imprimir por pantalla:
+
 1. Si es el padre o hijo
 2. Su pid
 3. El pid de su padre
 
 **shpar.c**: Crea un programa que sea capaz de ejecutar dos aplicaciones en paralelo cuyos nombres recibirá en la línea de comandos. Las aplicaciones a ejecutar podrán tener parámetros y entre la especificación de la primera aplicación y la de la segunda habrá un símbolo +.
 Ejemplo: `$hendrix> ./shpar ls -l *.c + ls -la`
-Deberá ejecutar "ls -l *.c" en paralelo con "ls -la".
+Deberá ejecutar "ls -l \*.c" en paralelo con "ls -la".
 
 - Práctica 4 (Señales):
 
