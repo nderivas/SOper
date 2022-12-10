@@ -16,7 +16,12 @@
 int migets(int fd, char buff[], char c) {
 
     char aux;
-    memset(buff, 0, strlen(buff)); // Limpia el buffer poniendo su memoria a 0
+    int i = 0;
+    
+    //Equivalente: memset(buff, 0, strlen(buff));
+    // Limpia el buffer poniendo su memoria a 0
+    for (int i = 0; i < buffsize; i++)
+        buff[i] = 0;
 
     do {
 
@@ -30,8 +35,12 @@ int migets(int fd, char buff[], char c) {
         } else if (bytesLeidos == 0) // Caso EOF
             return 0; // Devuelve 0 -> falso
     
-        if (aux != c) // Añadir al buffer
-            strncat(buff, &aux, 1);
+        if (aux != c) { // Añadir al buffer
+            
+            buff[i] = aux;
+            i++;
+        
+        }
 
     } while (aux != c);
 
@@ -42,11 +51,10 @@ int migets(int fd, char buff[], char c) {
 // Separa un string por los espacios en un vector de strings
 void vectorizador(char* v[], char s[]) {
 
-    int i = 1;    
-    char aux = ' ';
+    int i = 1;
     
-    v[0] = strtok(s, &aux);
-    while ((v[i] = strtok(NULL, &aux)) != NULL)
+    v[0] = strtok(s, " ");
+    while ((v[i] = strtok(NULL, " ")) != NULL)
         i++;
 
 };
@@ -70,12 +78,11 @@ int main(int argc, char* argv[]) {
         fprintf(stderr, "Error al abrir el archivo.\n");
         exit(1);
     }
-
+    
+    // Asumo la sintáxis estricta del archivo
     while(migets(fd, buno, '|')) { // Mientras lea del archivo + cogemos comando 1
-
-        char basura;
         
-        read(fd, &basura, 1); // Leemos el espacio que queda
+        read(fd, NULL, 1); // Leemos el espacio que queda
         migets(fd, bdos, '\n'); // Cogemos el segundo comando
 
         vectorizador(argvectUno, buno); // Creamos los vectores
