@@ -1,2 +1,3 @@
+ps -l | sort -n -r
 who | wc -l -c 
 ls -lr | wc -l

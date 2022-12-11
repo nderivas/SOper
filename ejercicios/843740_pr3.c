@@ -20,8 +20,8 @@ int migets(int fd, char buff[], char c) {
     
     //Equivalente: memset(buff, 0, strlen(buff));
     // Limpia el buffer poniendo su memoria a 0
-    for (int i = 0; i < buffsize; i++)
-        buff[i] = 0;
+    for (int j = 0; j < buffsize; j++)
+        buff[j] = 0;
 
     do {
 
@@ -82,7 +82,6 @@ int main(int argc, char* argv[]) {
     // Asumo la sintáxis estricta del archivo
     while(migets(fd, buno, '|')) { // Mientras lea del archivo + cogemos comando 1
         
-        read(fd, NULL, 1); // Leemos el espacio que queda
         migets(fd, bdos, '\n'); // Cogemos el segundo comando
 
         vectorizador(argvectUno, buno); // Creamos los vectores
