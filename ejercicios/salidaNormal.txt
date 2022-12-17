@@ -1,6 +1,7 @@
+38 - nor
+40 - nor
+42 - nor
+44 - nor
+46 - nor
+48 - nor
 50 - nor
-52 - nor
-54 - nor
-56 - nor
-58 - nor
-60 - nor

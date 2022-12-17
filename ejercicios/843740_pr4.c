@@ -22,7 +22,7 @@ struct descriptores {
 // Actua como un interruptor para la salida normal
 void cambiarSalidaNormal() {
 
-    signal(SIGUSR1, cambiarSalidaNormal);
+    // signal(SIGUSR1, cambiarSalidaNormal);
     if (salidaNormal)
         salidaNormal = 0;
     else
@@ -33,7 +33,7 @@ void cambiarSalidaNormal() {
 // Actua como un interruptor para la salida de error
 void cambiarSalidaError() {
 
-    signal(SIGUSR2, cambiarSalidaError);
+    // signal(SIGUSR2, cambiarSalidaError);
     if (salidaError)
         salidaError = 0;
     else
@@ -98,8 +98,16 @@ int main(int argc, char* argv[]) {
     // Padre va a controlar la salida
     printf("PID del padre: %d\n", getpid()); // pid monitor para poder mandar las señales
     char buffer[SIZE];
-    signal(SIGUSR1, cambiarSalidaNormal);
-    signal(SIGUSR2, cambiarSalidaError);
+
+    struct sigaction accionNormal, accionError;
+    accionNormal.sa_handler = cambiarSalidaNormal;
+    accionError.sa_handler = cambiarSalidaError;
+
+    sigaction(SIGUSR1, &accionNormal, NULL);
+    sigaction(SIGUSR2, &accionError, NULL);
+
+    // signal(SIGUSR1, cambiarSalidaNormal);
+    // signal(SIGUSR2, cambiarSalidaError);
 
     // Cerramos extremos de escritura
     close(pipeNormal[1]);
