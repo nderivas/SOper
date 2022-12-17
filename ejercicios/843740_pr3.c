@@ -9,6 +9,8 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <string.h>
+#include <sys/wait.h>
+#include <sys/types.h>
 
 #define buffsize 1024
 
@@ -18,11 +20,6 @@ int migets(int fd, char buff[], char c) {
     char aux;
     int i = 0;
     
-    //Equivalente: memset(buff, 0, strlen(buff));
-    // Limpia el buffer poniendo su memoria a 0
-    for (int j = 0; j < buffsize; j++)
-        buff[j] = 0;
-
     do {
 
         ssize_t bytesLeidos = read(fd, &aux, 1); // Lee byte a byte
@@ -32,10 +29,12 @@ int migets(int fd, char buff[], char c) {
             fprintf(stderr, "Error en la lectura.\n");
             exit(1);
         
-        } else if (bytesLeidos == 0) // Caso EOF
+        } else if (bytesLeidos == 0) { // Caso EOF
+    
+            buff[i] = '\0';
             return 0; // Devuelve 0 -> falso
     
-        if (aux != c) { // Añadir al buffer
+        } if (aux != c) { // Añadir al buffer
             
             buff[i] = aux;
             i++;
@@ -44,6 +43,7 @@ int migets(int fd, char buff[], char c) {
 
     } while (aux != c);
 
+    buff[i] = '\0';
     return 1; // Devuelve 1 -> verdadero
 
 }
@@ -57,7 +57,7 @@ void vectorizador(char* v[], char s[]) {
     while ((v[i] = strtok(NULL, " ")) != NULL)
         i++;
 
-};
+}
 
 int main(int argc, char* argv[]) {
 
@@ -106,9 +106,18 @@ int main(int argc, char* argv[]) {
             close(pipefds[0]);
             execvp(argvectDos[0], argvectDos);
 
+        } else {
+
+            close(pipefds[0]);
+            close(pipefds[1]);
+            wait(NULL);
+            wait(NULL);
+
         }
 
     }
+
+    close(fd);
 
     exit(0);
 

@@ -77,7 +77,5 @@ int main() {
             printf("P3: %ds\n", s);
             
         }
-
     }
-
 }

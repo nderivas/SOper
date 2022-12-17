@@ -1,0 +1,6 @@
+50 - nor
+52 - nor
+54 - nor
+56 - nor
+58 - nor
+60 - nor

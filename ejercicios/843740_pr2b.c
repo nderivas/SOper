@@ -26,8 +26,8 @@ int main(){
         pidUno = getppid();
 		
         while(1) {
-            fprintf(stderr,"h1");
-			kill(pidUno,SIGUSR1);
+            fprintf(stderr, "h1");
+			kill(pidUno, SIGUSR1);
 		    sigsuspend(&oldMasc);
         }
 
@@ -46,8 +46,8 @@ int main(){
 		sigsuspend(NULL);
 		
         while(1) {
-            fprintf(stderr,"p");
-			kill(pidDos,SIGUSR1);
+            fprintf(stderr, "p");
+			kill(pidDos, SIGUSR1);
 		    sigsuspend(&oldMasc);
         }
 	
