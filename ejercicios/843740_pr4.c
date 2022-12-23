@@ -10,34 +10,31 @@
 
 #define SIZE 1024
 
+// Modo 1: Pantalla
+// Modo 2: Fichero
+// Modo 3: Los dos
+
 int salidaNormal = 1;
 int salidaError = 1;
 
 struct descriptores {
 
-    int fdLectura, fdEscritura;
+    int fdLectura, fdEscritura, salida;
+    int* modo;
 
 };
 
 // Actua como un interruptor para la salida normal
 void cambiarSalidaNormal() {
 
-    // signal(SIGUSR1, cambiarSalidaNormal);
-    if (salidaNormal)
-        salidaNormal = 0;
-    else
-        salidaNormal = 1;
+    salidaNormal = (salidaNormal % 3) + 1;
 
 }
 
 // Actua como un interruptor para la salida de error
 void cambiarSalidaError() {
 
-    // signal(SIGUSR2, cambiarSalidaError);
-    if (salidaError)
-        salidaError = 0;
-    else
-        salidaError = 1;
+    salidaError = (salidaError % 3) + 1;
 
 }
 
@@ -51,9 +48,9 @@ void funcionHilo(void* fds) {
     while (leido != 0) {
 
         // Escribimos en diferentes salidas dependiendo de la variable global
-        if (salidaError)
-            fprintf(stderr, "%s", buffer);
-        else
+        if ((*((struct descriptores*)fds)->modo % 2) == 1)
+            write(((struct descriptores*)fds)->salida, buffer, leido);
+        if (*((struct descriptores*)fds)->modo > 1)
             write(((struct descriptores*)fds)->fdEscritura, buffer, leido);
         leido = read(((struct descriptores*)fds)->fdLectura, buffer, SIZE);
 
@@ -106,9 +103,6 @@ int main(int argc, char* argv[]) {
     sigaction(SIGUSR1, &accionNormal, NULL);
     sigaction(SIGUSR2, &accionError, NULL);
 
-    // signal(SIGUSR1, cambiarSalidaNormal);
-    // signal(SIGUSR2, cambiarSalidaError);
-
     // Cerramos extremos de escritura
     close(pipeNormal[1]);
     close(pipeError[1]);
@@ -120,26 +114,16 @@ int main(int argc, char* argv[]) {
         exit(1);
 
     // Lanzamos un hilo que se encarga de la salida de error
-    pthread_t hilo;
-    struct descriptores fds = {pipeError[0], fdError};
-    pthread_create(&hilo, NULL, funcionHilo, &fds);
-
-    // Leemos hasta que no haya nada más en el pipe
-    // Este hilo se encarga de la salida estándar
-    int leido = read(pipeNormal[0], buffer, SIZE);
-    while (leido != 0) {
-
-        // Escribimos en diferentes salidas dependiendo de la variable global
-        if (salidaNormal)
-            fprintf(stdout, "%s", buffer);
-        else
-            write(fdNormal, buffer, leido);
-        leido = read(pipeNormal[0], buffer, SIZE);
-
-    }
+    // y otro de la salida normal
+    pthread_t hiloNormal, hiloError;
+    struct descriptores fdsError = {pipeError[0], fdError, 2, &salidaError};
+    struct descriptores fdsNormal = {pipeNormal[0], fdNormal, 1, &salidaNormal};
+    pthread_create(&hiloError, NULL, funcionHilo, &fdsError);
+    pthread_create(&hiloNormal, NULL, funcionHilo, &fdsNormal);
 
     // Join de hilos
-    pthread_join(hilo, NULL);
+    pthread_join(hiloNormal, NULL);
+    pthread_join(hiloError, NULL);
 
     // Cerramos
     close(pipeNormal[0]);

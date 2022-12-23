@@ -8,14 +8,16 @@ int main(int argc, char* argv[]) {
 
         sleep(1);
 
-        //char buff[10];
-        //sprintf(buff, "%d - nor\n", i);
+        char buff[10];
+        sprintf(buff, "%d - nor\n", i);
+
+        char b[10];
+        sprintf(b, "%d - err\n", i);
 
         if (i % 2 == 0)
-            fprintf(stdout, "%d - nor\n", i);
-            //write(1, buff, 9);
+            write(1, buff, 9);
         else
-            fprintf(stderr, "%d - err\n", i);
+            write(2, b, 9);
 
     }
 
